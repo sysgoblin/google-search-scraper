@@ -1,18 +1,3 @@
-# results 1-100
-# site : https://www.google.com/search?q=
-# dork: intext:"secure+trust+bank"+-site:securetrustbank.com
-# number of results per page: &num=100
-# what number to start at: &start=0
-# time range enforces sort by relevance
-# all time: &tbas=0
-# past week only: &tbs=qdr:w
-# past month: &tbs=qdr:m
-# past year: &tbs=qdr:y
-# past hour: &tbs=qdr:h
-# custom range: (text) tbs=cdr:1,cd_min:1/10/2019,cd_max:1/26/2019 (url encoded) tbs=cdr%3A1%2Ccd_min%3A1%2F10%2F2019%2Ccd_max%3A1%2F26%2F2019
-# verbatim search: &tbs=li
-# GOOGLE_ABUSE_EXEMPTION=ID=cb4524e307d40a7a:TM=1559492993:C=r:IP=212.159.103.86-:S=APGng0vzUUQOALhaz4KzUZF3KJXhe2xycQ
-
 import requests
 import time
 import random
@@ -25,9 +10,9 @@ from fake_useragent import UserAgent
 
 parser = argparse.ArgumentParser(description="google scraper", usage='bleh')
 parser.add_argument('--intext', required=True, type=str, help='string to search for')
-parser.add_argument('--excluded_domains', required=False,  nargs='+', help='domains to exlude from results')
-parser.add_argument('--range', required=True, choices=['hr', 'day', 'week', 'month', 'year', 'alltime'], default='alltime')
-parser.add_argument('--output_path', required=False )
+parser.add_argument('--excluded-domains', metavar='excluded_domains', required=False,  nargs='+', help='domains to exlude from results')
+parser.add_argument('--range', required=False, choices=['hr', 'day', 'week', 'month', 'year', 'alltime'], default='alltime')
+parser.add_argument('--output-path', metavar='output_path', required=False )
 parser.add_argument('--proxy', required=False, )
 
 args = parser.parse_args()
@@ -48,19 +33,15 @@ def main():
 
     textdork_str = 'intext:' + '"' + textdork.replace(' ', '+') + '"'
 
-    if args.range:
-        range_dict = {
-        "hr" : '&tbs=qdr:h',
-        "day" : '&tbs=qdr:d',
-        "week" : '&tbs=qdr:w',
-        "month" : '&tbs=qdr:m',
-        "year" : '&tbs=qdr:y',
-        "alltime" : '&tbas=0',
-        }
-
-        range = range_dict[args.range]
-    else:
-        range = '&tbas=0'
+    range_dict = {
+    "hr" : '&tbs=qdr:h',
+    "day" : '&tbs=qdr:d',
+    "week" : '&tbs=qdr:w',
+    "month" : '&tbs=qdr:m',
+    "year" : '&tbs=qdr:y',
+    "alltime" : '&tbas=0',
+    }
+    range = range_dict[args.range]
 
     # set some other values
     requests.packages.urllib3.disable_warnings()
@@ -151,9 +132,8 @@ def main():
     print(json.dumps(results_obj, indent=4))
 
     if args.output_path:
-        f = open( args.output_path, 'w')
-        f.write(json.dumps(results_obj, indent=4))
-        f.close
+        with open(args.output_path, 'w') as outfile:
+            json.dump(results_obj, outfile)
 
 
 if __name__ == '__main__':
