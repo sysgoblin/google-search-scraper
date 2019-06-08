@@ -1,4 +1,4 @@
-# GScrape
+# GScrape (WIP)
 ## Google Search Scraper
 
 Scrapes google so you don't have to.
@@ -29,3 +29,9 @@ $ python google-search-scraper.py --intext "sysgoblin" --excluded-domains "githu
 
 *Note: I haven't been caught by Google's bot detection yet however if you are stopped due to captcha, using this should 
 allow you to open the page within your browser and complete the request.
+
+##### To Do
+* Replace unicode w/ text
+* Allow proxy config customisation
+* Clean up code
+* Test captcha handling
