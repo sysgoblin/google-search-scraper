@@ -27,7 +27,8 @@ parser = argparse.ArgumentParser(description="google scraper", usage='bleh')
 parser.add_argument('--intext', required=True, type=str, help='string to search for')
 parser.add_argument('--excluded_domains', required=False,  nargs='+', help='domains to exlude from results')
 parser.add_argument('--range', required=True, choices=['hr', 'day', 'week', 'month', 'year', 'alltime'], default='alltime')
-parser.add_argument('--output_path', required=False, )
+parser.add_argument('--output_path', required=False )
+parser.add_argument('--proxy', required=False, )
 
 args = parser.parse_args()
 print(args)
@@ -96,7 +97,12 @@ def main():
 
         url = url + '&num=100' '&start=' + str(startnum) + range
 
-        req = requests.get(url, headers=headers, verify=False)
+        if args.proxy:
+            proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
+            req = requests.get(url, proxies=proxies, headers=headers, verify=False)
+        else:
+            req = requests.get(url, headers=headers, verify=False)
+
         soup = BeautifulSoup(req.content, "html.parser")
 
         # links only
